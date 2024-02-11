@@ -1,12 +1,18 @@
 // Redux Store
 class ReduxStore {
 	#counter;
+	#listenerFn;
 	constructor() {
 		this.#counter = 100;
 	}
 
 	getState() {
 		return this.#counter;
+	}
+
+	subscribe(updateFn) {
+		this.#listenerFn = updateFn; // Will invoke on dispatch
+		return () => (this.#counter = 100); // To Reset after 5 seconds
 	}
 
 	reducer(currentState, action) {
@@ -22,13 +28,21 @@ class ReduxStore {
 
 	dispatch(action) {
 		this.#counter = this.reducer(this.#counter, action);
+		this.#listenerFn(this.#counter); // To update the UI
 	}
 }
 
 const store1 = new ReduxStore();
 
 const counterDiv = document.getElementById('counter');
-counterDiv.innerHTML = store1.getState();
+counterDiv.innerHTML = store1.getState(); // Initial Render
+
+const unsubscribe = store1.subscribe((counterVal) => (counterDiv.innerHTML = counterVal)); // For Update
+
+setTimeout(() => {
+	unsubscribe();
+	store1.dispatch({ type: '' });
+}, 5000);
 
 function increment() {
 	const action = {
@@ -36,8 +50,6 @@ function increment() {
 		payload: 10,
 	};
 	store1.dispatch(action);
-
-	counterDiv.innerHTML = store1.getState();
 }
 
 function decrement() {
@@ -46,6 +58,4 @@ function decrement() {
 		payload: 10,
 	};
 	store1.dispatch(action);
-
-	counterDiv.innerHTML = store1.getState();
 }
