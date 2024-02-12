@@ -1,4 +1,4 @@
-// Redux Store
+// Mocking Redux Store
 class ReduxStore {
 	#counter;
 	#listenerFn;
@@ -12,7 +12,7 @@ class ReduxStore {
 
 	subscribe(updateFn) {
 		this.#listenerFn = updateFn; // Will invoke on dispatch
-		return () => (this.#counter = 100); // To Reset after 5 seconds
+		return () => (this.#counter = 100); // To Reset
 	}
 
 	reducer(currentState, action) {
@@ -28,7 +28,7 @@ class ReduxStore {
 
 	dispatch(action) {
 		this.#counter = this.reducer(this.#counter, action);
-		this.#listenerFn(this.#counter); // To update the UI
+		this.#listenerFn(); // To update the UI
 	}
 }
 
@@ -37,12 +37,7 @@ const store1 = new ReduxStore();
 const counterDiv = document.getElementById('counter');
 counterDiv.innerHTML = store1.getState(); // Initial Render
 
-const unsubscribe = store1.subscribe((counterVal) => (counterDiv.innerHTML = counterVal)); // For Update
-
-setTimeout(() => {
-	unsubscribe();
-	store1.dispatch({ type: '' });
-}, 5000);
+const unsubscribe = store1.subscribe(() => (counterDiv.innerHTML = store1.getState())); // For Update
 
 function increment() {
 	const action = {
@@ -58,4 +53,9 @@ function decrement() {
 		payload: 10,
 	};
 	store1.dispatch(action);
+}
+
+function reset() {
+	unsubscribe();
+	store1.dispatch({ type: 'RESET' });
 }
