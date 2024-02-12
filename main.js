@@ -1,61 +1,36 @@
-// Mocking Redux Store
-class ReduxStore {
-	#counter;
-	#listenerFn;
-	constructor() {
-		this.#counter = 100;
+import { store1 } from './redux/store.js';
+
+function App() {
+	const [counter, setCounter] = React.useState(store1.getState());
+
+	function increment() {
+		const action = { type: 'INC', payload: 10 };
+		store1.dispatch(action);
 	}
 
-	getState() {
-		return this.#counter;
+	function decrement() {
+		const action = { type: 'DEC', payload: 10 };
+		store1.dispatch(action);
 	}
 
-	subscribe(updateFn) {
-		this.#listenerFn = updateFn; // Will invoke on dispatch
-		return () => (this.#counter = 100); // To Reset
+	const unsubscribe = store1.subscribe(() => setCounter(store1.getState()));
+
+	function reset() {
+		unsubscribe();
+		store1.dispatch({ type: 'RESET' });
 	}
 
-	reducer(currentState, action) {
-		if (!action.type) throw 'No action type!';
-		if (action.type === 'INC') {
-			return currentState + action.payload;
-		} else if (action.type === 'DEC') {
-			return currentState - action.payload;
-		} else {
-			return currentState;
-		}
-	}
-
-	dispatch(action) {
-		this.#counter = this.reducer(this.#counter, action);
-		this.#listenerFn(); // To update the UI
-	}
+	return (
+		<>
+			<button onClick={decrement}>Dec</button>
+			<span className='counter'>{counter}</span>
+			<button onClick={increment}>Inc</button>
+			<br />
+			<button onClick={reset}>Reset</button>
+		</>
+	);
 }
 
-const store1 = new ReduxStore();
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
-const counterDiv = document.getElementById('counter');
-counterDiv.innerHTML = store1.getState(); // Initial Render
-
-const unsubscribe = store1.subscribe(() => (counterDiv.innerHTML = store1.getState())); // For Update
-
-function increment() {
-	const action = {
-		type: 'INC',
-		payload: 10,
-	};
-	store1.dispatch(action);
-}
-
-function decrement() {
-	const action = {
-		type: 'DEC',
-		payload: 10,
-	};
-	store1.dispatch(action);
-}
-
-function reset() {
-	unsubscribe();
-	store1.dispatch({ type: 'RESET' });
-}
+root.render(<App />);

@@ -5,15 +5,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Document</title>
 		<link rel="stylesheet" href="style.css" />
+		<script src="https://unpkg.com/react@latest/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@latest/umd/react-dom.development.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/redux@latest/dist/redux.min.js"></script>
+		<!-- <script src="https://cdn.jsdelivr.net/npm/react-redux@latest/dist/react-redux.min.js"></script> -->
 	</head>
 	<body>
-		<h2>Mocking a Redux Store with plain JS</h2>
-		<p>This example does not use any React or Redux.</p>
-		<button onclick="decrement()">DEC</button>
-		<span id="counter"></span>
-		<button onclick="increment()">INC</button>
-		<br />
-		<button onclick="reset()">RESET</button>
-		<script src="./main.js"></script>
+		<h2>This example uses React & Redux</h2>
+		<div id="root"></div>
+		<script src="./main.js" type="text/babel" data-type="module"></script>
 	</body>
 </html>
