@@ -1,10 +1,10 @@
 import { store1 } from './redux/store.js';
-import { decrement, increment, reset } from './redux/slice.js';
+import { decrement, increment, reset } from './redux/counterSlice.js';
 
 const { useSelector, useDispatch, Provider } = ReactRedux;
 
 function App() {
-	const counter = useSelector((state) => state);
+	const counter = useSelector((state) => state.counter);
 	const dispatch = useDispatch();
 
 	return (
